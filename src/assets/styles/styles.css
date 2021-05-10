@@ -1,0 +1,52 @@
+@font-face {
+  font-family: 'Monotype Corsiva';
+  src: url(../fonts/8209.ttf);
+}
+
+html {
+  font-size: 1.5vw;
+  font-family:  Arial;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin:0;
+  overflow: hidden;
+}
+
+.fade-transition-router-enter-active {
+  animation: changeLocation 1s;
+}
+
+
+@keyframes changeLocation {
+  0%{
+    transform: scale(0,1);
+  }
+  100%{
+    transform: scale(1,1);
+  }
+}
+
+@media (orientation: portrait){
+  #cruise-main {
+    display: none;
+  }
+  #cruise-book {
+    display: none;
+  }
+  #cruise-map {
+    display: none;
+  }
+  body {
+    width: 100vw;
+    height: 100vh;
+    background-image: url(../images/turn.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+  }
+}
