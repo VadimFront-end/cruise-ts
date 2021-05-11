@@ -11,22 +11,33 @@
       <Popover
           transition="popover-appear"
           name="allWay"
-          event="hover"
-          :pointer=true>
+          event="hover">
         Показать весь путь
       </Popover>
-      <router-link :to="'/'">
+      <img
+          v-popover:toMain.right
+          @click="$router.push('/')"
+          src="../assets/interactiveimgs/bottle.png"
+          alt="bottle"
+          class="bottleMap">
+      <Popover
+          transition="popover-appear-left"
+          name="toMain"
+          event="hover">
+        На главную
+      </Popover>
         <img
-            src="../assets/interactiveimgs/bottle.png"
-            alt="bottle"
-            class="bottleMap">
-      </router-link>
-      <router-link :to="'/cruiseBook'">
-        <img
+            v-popover:toBook.left
+            @click="$router.push('/cruiseBook')"
             src="../assets/interactiveimgs/book.png"
             alt="map"
             id="to-book">
-      </router-link>
+      <Popover
+          transition="popover-appear-right"
+          name="toBook"
+          event="hover">
+        К ниге
+      </Popover>
       <img
           v-popover:removeProgress
           id="progress"
@@ -36,8 +47,7 @@
       <Popover
           transition="popover-appear"
           name="removeProgress"
-          event="hover"
-          :pointer=true>
+          event="hover">
         Сбросить прогресс
       </Popover>
       <div id="smallbook" @mouseover="sbOpen" @mouseout="sbClose">
@@ -53,8 +63,7 @@
       <Popover
           transition="popover-appear"
           name="selectPage"
-          event="hover"
-          :pointer=true>
+          event="hover">
         Выбрать страницу
       </Popover>
       <div v-for="(dot, index) in OX" :key="index">
@@ -74,8 +83,7 @@
             transition="popover-appear"
             :delay="400"
             :name="'' + index"
-            event="hover"
-            :pointer=false>
+            event="hover">
           {{ cities[point] }}
         </Popover>
       </div>
@@ -423,6 +431,7 @@ input {
 
 @media (min-width: 1050px) {
   #warmashine {
+    cursor: pointer;
     background-image: url(../assets/interactiveimgs/shipbut.png);
     background-repeat: no-repeat;
     background-size: 100% 100%;
@@ -504,6 +513,7 @@ input {
 }
 
 #progress {
+  cursor: pointer;
   width: 10vw;
   height: 10vw;
   position: absolute;
@@ -542,6 +552,7 @@ input {
 }
 
 #to-book {
+  cursor: pointer;
   position: absolute;
   top: 30vh;
   right: 2vw;
@@ -551,6 +562,7 @@ input {
 }
 
 .bottleMap {
+  cursor: pointer;
   position: absolute;
   top: 30vh;
   left: 2vw;
@@ -630,6 +642,26 @@ input {
     line-height: 1.5;
     padding: 7px;
   }
+  .vue-popover.dropdown-position-bottom:before {
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid rgba(0, 0, 0, 0.5);
+ }
+  .vue-popover.dropdown-position-top:before {
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid rgba(0, 0, 0, 0.5);
+ }
+  .vue-popover.dropdown-position-left:before {
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-left: 6px solid rgba(0, 0, 0, 0.5);
+ }
+  .vue-popover.dropdown-position-right:before {
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-right: 6px solid rgba(0, 0, 0, 0.5);
+ }
 }
 
 </style>
