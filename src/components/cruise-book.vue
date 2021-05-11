@@ -109,7 +109,7 @@ export default Vue.extend({
       booksOpacity: false,
       imageCities,
       pageObject: this.$store.state.book[2],
-      page: localStorage.getItem('page') ? +localStorage.getItem('page') : 0,
+      page: localStorage.getItem('page') ? +localStorage.getItem('page')! : 0,
       isShowPhoto: false,
       openedPhoto: {
         photo: '',

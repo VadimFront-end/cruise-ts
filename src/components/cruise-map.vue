@@ -9,6 +9,7 @@
           id="compass"
           @click="showAllWay">
       <Popover
+          transition="popover-appear"
           name="allWay"
           event="hover"
           :pointer=true>
@@ -16,30 +17,16 @@
       </Popover>
       <router-link :to="'/'">
         <img
-            v-popover:toMain.right
             src="../assets/interactiveimgs/bottle.png"
             alt="bottle"
             class="bottleMap">
       </router-link>
-      <Popover
-          name="toMain"
-          event="hover"
-          :pointer=true>
-        На главную
-      </Popover>
       <router-link :to="'/cruiseBook'">
         <img
-            v-popover:toBook.left
             src="../assets/interactiveimgs/book.png"
             alt="map"
             id="to-book">
       </router-link>
-      <Popover
-          name="toBook"
-          event="hover"
-          :pointer=true>
-        Книга
-      </Popover>
       <img
           v-popover:removeProgress
           id="progress"
@@ -47,6 +34,7 @@
           alt="sturval"
           @click="removeProgress">
       <Popover
+          transition="popover-appear"
           name="removeProgress"
           event="hover"
           :pointer=true>
@@ -63,6 +51,7 @@
         <input v-model.trim="selectedPage" type="number" max="258" min="0" placeholder="№Page">
       </div>
       <Popover
+          transition="popover-appear"
           name="selectPage"
           event="hover"
           :pointer=true>
@@ -82,7 +71,8 @@
             @mouseout="appearingWindowClose()">
         </div>
         <Popover
-            :delay="500"
+            transition="popover-appear"
+            :delay="400"
             :name="'' + index"
             event="hover"
             :pointer=false>
@@ -136,9 +126,9 @@ export default Vue.extend({
       const canvas = document.getElementById('lines') as HTMLCanvasElement;
       this.ctx = canvas.getContext('2d');
       setTimeout(() => {
-        this.plotting(+localStorage.getItem('way'));
-        if (+localStorage.getItem('way') < this.GET_PAGE_INDEX) {
-          if (this.GET_PAGE_INDEX - localStorage.getItem('way') === 1)
+        this.plotting(+localStorage.getItem('way')!);
+        if (+localStorage.getItem('way')! < this.GET_PAGE_INDEX) {
+          if (this.GET_PAGE_INDEX - (+localStorage.getItem('way')!) === 1)
             this.buildHead();
           else
             this.plotting(this.GET_PAGE_INDEX);
@@ -382,6 +372,51 @@ export default Vue.extend({
 </script>
 
 <style>
+.popover-appear-enter-active {
+  animation: showPopover .8s;
+}
+
+.popover-appear-left-enter-active {
+  animation: showPopoverLeft .8s;
+}
+
+.popover-appear-right-enter-active {
+  animation: showPopoverRight .8s;
+}
+
+@keyframes showPopover {
+  0% {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes showPopoverLeft {
+  0% {
+    opacity: 0;
+    transform: translate(20px);
+  }
+  100% {
+    transform: translate(0);
+    opacity: 1;
+  }
+}
+
+@keyframes showPopoverRight {
+  0% {
+    opacity: 0;
+    transform: translate(-20px);
+  }
+  100% {
+    transform: translate(0);
+    opacity: 1;
+  }
+}
+
 input {
   display: none;
 }
@@ -580,13 +615,13 @@ input {
 
 @media (min-width: 1050px) {
   .dot:hover {
+    cursor: pointer;
     transform: scale(17);
     transition: all .3s;
     box-shadow: 0 0 10px rgb(0, 0, 0);
     border: none;
     z-index: 3;
   }
-
 [data-popover] {
     background: rgba(0, 0, 0, 0.5);
     color: #f9f9f9;

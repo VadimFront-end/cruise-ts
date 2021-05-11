@@ -8,8 +8,8 @@ Vue.use(Vuex);
 const store = new Vuex.Store<IStore>({
     state: {
         book,
-        pageIndex: localStorage.getItem('way') ? +localStorage.getItem('way') : 0,
-        audio: new Audio(localStorage.getItem('audio') === null ? '../assets/audio/read/8read.mp3' : localStorage.getItem('audio')),
+        pageIndex: localStorage.getItem('way') ? +localStorage.getItem('way')! : 0,
+        audio: new Audio(localStorage.getItem('audio') === null ? '../assets/audio/read/8read.mp3' : localStorage.getItem('audio')!),
         playAudio: false
     },
     mutations: {
