@@ -1,6 +1,6 @@
 export interface ICruiseBook {
     booksOpacity: boolean,
-    imgs: string,
+    imageCities: string[],
     pageObject: IBookData,
     page: number,
     isShowPhoto: boolean,
@@ -20,7 +20,7 @@ export interface ICruseBookPage {
 export interface ICruiseMap {
     OX: number[],
     OY: number[],
-    ImageCities: string[],
+    imageCities: string[],
     backgroundImage: string,
     point: number,
     cities: string[],

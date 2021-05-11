@@ -10,7 +10,7 @@
           class="to-map">
     </router-link>
     <div @click="turn(true)" class="turn10" style="transform: rotate(180deg)"></div>
-    <div @click="turn(false)" class="turn10" style="left: 1vw;right: auto"></div>
+    <div @click="turn(false)" class="turn10" style="left: 1vw; right: auto"></div>
     <transition name="fade-transition-router">
       <div
           v-if="openBook"
