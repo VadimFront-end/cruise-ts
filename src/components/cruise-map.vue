@@ -3,46 +3,91 @@
     <div id="cruise-map" v-if="openMap">
       <button @click="$store.commit('playMusic')" class="audio"></button>
       <img
+          v-popover:allWay
           src="../assets/interactiveimgs/compass.png"
           alt="compass"
           id="compass"
           @click="showAllWay">
+      <Popover
+          name="allWay"
+          event="hover"
+          :pointer=true>
+        Показать весь путь
+      </Popover>
       <router-link :to="'/'">
         <img
+            v-popover:toMain.right
             src="../assets/interactiveimgs/bottle.png"
             alt="bottle"
             class="bottleMap">
       </router-link>
+      <Popover
+          name="toMain"
+          event="hover"
+          :pointer=true>
+        На главную
+      </Popover>
       <router-link :to="'/cruiseBook'">
         <img
+            v-popover:toBook.left
             src="../assets/interactiveimgs/book.png"
             alt="map"
             id="to-book">
       </router-link>
+      <Popover
+          name="toBook"
+          event="hover"
+          :pointer=true>
+        Книга
+      </Popover>
       <img
+          v-popover:removeProgress
           id="progress"
           src="../assets/interactiveimgs/sturval.png"
           alt="sturval"
           @click="removeProgress">
+      <Popover
+          name="removeProgress"
+          event="hover"
+          :pointer=true>
+        Сбросить прогресс
+      </Popover>
       <div id="smallbook" @mouseover="sbOpen" @mouseout="sbClose">
         <p v-html="smallBook" style="margin-left:11%;margin-top:7%;font-family: Bradley Hand, cursive;">
           {{ smallBook }}</p>
       </div>
-      <div id="warmashine" @click="pageNumber">
+      <div
+          id="warmashine"
+          @click="pageNumber"
+          v-popover:selectPage>
         <input v-model.trim="selectedPage" type="number" max="258" min="0" placeholder="№Page">
       </div>
-      <div
-          v-for="(dot, index) in OX"
-          class="dot"
-          :style="{left:OX[index]+'%',
-                    top:OY[index]+'%',
-                    backgroundImage: (point === index) ? 'url(' + require('../assets/images/' + backgroundImage + '.jpg') + ')' :''
+      <Popover
+          name="selectPage"
+          event="hover"
+          :pointer=true>
+        Выбрать страницу
+      </Popover>
+      <div v-for="(dot, index) in OX" :key="index">
+        <div
+            v-popover="{ name: '' + index }"
+            class="dot"
+            :style="{left: OX[index] + '%',
+                     top: OY[index] + '%',
+                     backgroundImage: (point === index) ? 'url(' + require('../assets/images/' + backgroundImage + '.jpg') + ')' :''
                    }"
-          v-show="(index<=GET_PAGE_INDEX)||(compass)"
-          @click="moveToBookPage(index)"
-          @mouseover="appearingWindowOpen(index)"
-          @mouseout="appearingWindowClose()"
-          :key="index">
+            v-show="(index<=GET_PAGE_INDEX)||(compass)"
+            @click="moveToBookPage(index)"
+            @mouseover="appearingWindowOpen(index)"
+            @mouseout="appearingWindowClose()">
+        </div>
+        <Popover
+            :delay="500"
+            :name="'' + index"
+            event="hover"
+            :pointer=false>
+          {{ cities[point] }}
+        </Popover>
       </div>
       <canvas
           id="lines"
@@ -54,17 +99,22 @@
 </template>
 
 <script lang="ts">
-import { mapGetters } from 'vuex'
-import { ICruiseMap } from "@/interfaces";
 import Vue from 'vue'
+import { mapGetters } from 'vuex'
+import Popover from 'vue-js-popover'
+import { ICruiseMap } from '@/interfaces'
+import { cities, OX, OY, imageCities, smallBookText } from '@/constants'
+import { solutionSystem } from "@/functions";
 
+Vue.use(Popover)
 export default Vue.extend({
   name: 'cruise-map',
   data(): ICruiseMap {
     return {
-      OX: [63.5, 65.4, 56.8, 49.2, 36.7, 37.6, 38.3, 39, 39.7, 40.7, 41.5, 45, 46.1, 48.9, 52.9, 53.9, 53.5, 52.4, 51.4],
-      OY: [19, 19.3, 20.3, 27, 61.8, 61.7, 60.3, 56.7, 56.2, 51.6, 49, 32.5, 30.1, 29, 28.9, 27.5, 26, 25, 22],
-      Imgs: this.$store.state.imgCities,
+      OX,
+      OY,
+      imageCities,
+      cities,
       backgroundImage: '',
       point: -1,
       dots: [],
@@ -98,7 +148,7 @@ export default Vue.extend({
     },
     appearingWindowOpen(index: number) {
       this.point = index;
-      this.backgroundImage = this.Imgs[index];
+      this.backgroundImage = this.imageCities[index];
     },
     appearingWindowClose() {
       this.point = -1;
@@ -158,7 +208,7 @@ export default Vue.extend({
       else centerY = y1 + Math.abs(y1 - y2) / 2;
       let x3 = centerX - (y2 - y1) / 8;
       let y3 = -((x2 - x1) / (y2 - y1)) * x3 + (centerY + ((x2 - x1) / (y2 - y1)) * centerX);
-      let odd = this.solutionSystem(x1, y1, x2, y2, x3, y3);
+      let odd = solutionSystem(x1, y1, x2, y2, x3, y3);
       let funcX = x1;
       let funcY = y1;
       if (document.getElementById('plane')) document.getElementById('cruise-map')!.removeChild(document.getElementById('plane')!);
@@ -178,25 +228,6 @@ export default Vue.extend({
       }
       document.getElementById('cruise-map')!.appendChild(transport);
       this.buildWay(funcX, funcY, odd, transport, [x1, x2, y1, y2]);
-    },
-    solutionSystem(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number): number[] {
-      let system = [
-        [y1, x1 * x1, x1, 1],
-        [y2, x2 * x2, x2, 1],
-        [y3, x3 * x3, x3, 1]
-      ];
-      for (let i = 0; i < 4; i++) {
-        system[1][i] = system[1][i] - system[0][i];
-        system[2][i] = system[2][i] - system[0][i];
-      }
-      let factor = system[1][2] / system[2][2];
-      for (let i = 0; i < 3; i++) {
-        system[1][i] = system[1][i] - (system[2][i]) * factor;
-      }
-      let a = system[1][0] / system[1][1];
-      let b = (system[2][0] - a * (system[2][1])) / system[2][2];
-      let c = system[0][0] - a * (system[0][1]) - b * (system[0][2]);
-      return [a, b, c];
     },
     buildWay(fx: number, fy: number, odd: number[], transport: HTMLElement, coordinates: number[]) {
       const [x1, x2, y1, y2] = coordinates;
@@ -317,7 +348,7 @@ export default Vue.extend({
       this.$router.push('/cruiseBook');
     },
     sbOpen() {
-      this.smallBook = 'Навигация по книге:<br>1. Нажав на компас (слева в углу карты) вы увидите весь маршрут путешествия.<br>- Нажав на красную точку (обозначение города) вы перенесетесь на главу, где происходит действие<br>- Повторно нажав на компас, вы отключите маршрут на карте.<br>2. Корабль в нижнем левом углу – набрав цифру в поле корабля, вы перенесётесь на соответствующую страницу в книге.<br>3. Штурвал корабля - нажав на него, вы снимаете весь прогресс чтения книги.<br>4. Значок ноты слева – нажав на него, вы прослушаете плейлист путешествия.<br>5. Фото - нажав на фото оно увеличится для просмотра.<br>6. Видео – нажав на значок видео, видео начнёт воспроизведение (его можно развернуть на весь экран).<br>7. Рюкзак – нажав на него, вы увидите сувениры из поездки.<br>8. Карта – значок карты раскроет карту маршрута.';
+      this.smallBook = smallBookText;
       document.getElementById('to-book')!.style.opacity = '0';
       document.getElementById('to-book')!.style.opacity = '0';
     },
@@ -555,5 +586,15 @@ input {
     border: none;
     z-index: 3;
   }
+
+[data-popover] {
+    background: rgba(0, 0, 0, 0.5);
+    color: #f9f9f9;
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.5;
+    padding: 7px;
+  }
 }
+
 </style>

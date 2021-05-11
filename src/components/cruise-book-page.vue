@@ -66,7 +66,7 @@
 </template>
 
 <script lang="ts">
-import cruiseBooksPhoto from './cruise-books-photo'
+import cruiseBooksPhoto from './cruise-books-photo.vue'
 import { ICruseBookPage, IOpenedPhoto } from '@/interfaces'
 import Vue from 'vue'
 

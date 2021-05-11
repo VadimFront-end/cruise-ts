@@ -20,9 +20,10 @@ export interface ICruseBookPage {
 export interface ICruiseMap {
     OX: number[],
     OY: number[],
-    Imgs: string[],
+    ImageCities: string[],
     backgroundImage: string,
     point: number,
+    cities: string[],
     dots: Element[],
     ctx: CanvasRenderingContext2D | null,
     clientWidth: number,

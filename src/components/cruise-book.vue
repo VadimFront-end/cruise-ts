@@ -88,6 +88,7 @@ import cruiseBookPage from './cruise-book-page.vue'
 import { mapGetters } from 'vuex'
 import {ICruiseBook, IOpenedBox, IOpenedPhoto} from '@/interfaces'
 import Vue from 'vue'
+import { imageCities, musics } from "@/constants";
 
 interface IOpacityBook {
   opacity: number,
@@ -98,7 +99,6 @@ interface IBackgroundImage {
   backgroundImage: string
 }
 
-const music = ['audio/read/8read.mp3', 'audio/read/12read.mp3', 'audio/read/14read.mp3', 'audio/read/14rio.mp3', 'audio/read/141read.mp3', 'audio/read/142read.mp3', 'audio/read/16read.mp3', 'audio/read/20read.mp3', 'audio/read/last.mp3'];
 export default Vue.extend({
   name: 'cruise-book',
   components: {
@@ -107,7 +107,7 @@ export default Vue.extend({
   data(): ICruiseBook {
     return {
       booksOpacity: false,
-      imgs: this.$store.state.imgCities,
+      imageCities,
       pageObject: this.$store.state.book[2],
       page: localStorage.getItem('page') ? +localStorage.getItem('page') : 0,
       isShowPhoto: false,
@@ -200,7 +200,7 @@ export default Vue.extend({
     },
     backGroundChange(): IBackgroundImage {
       return {
-        backgroundImage: 'url(' + require('../assets/images/' + this.imgs[this.GET_PAGE_INDEX] + '.jpg') + ')'
+        backgroundImage: 'url(' + require('../assets/images/' + this.imageCities[this.GET_PAGE_INDEX] + '.jpg') + ')'
       }
     },
     ...mapGetters([
@@ -215,17 +215,17 @@ export default Vue.extend({
       localStorage.setItem('page', String(this.page));
       console.log(localStorage.getItem('page'))
       if (this.page + 2 === 52)
-        this.$store.commit('startMusic', music[0]);
+        this.$store.commit('startMusic', musics[0]);
       if (this.page + 2 === 80)
-        this.$store.commit('startMusic', music[1]);
+        this.$store.commit('startMusic', musics[1]);
       if (this.page + 2 === 94)
-        this.$store.commit('startMusic', music[2]);
+        this.$store.commit('startMusic', musics[2]);
       if (this.page + 2 === 124)
-        this.$store.commit('startMusic', music[6]);
+        this.$store.commit('startMusic', musics[6]);
       if (this.page + 2 === 178)
-        this.$store.commit('startMusic', music[7]);
+        this.$store.commit('startMusic', musics[7]);
       if (this.page + 2 === 254)
-        this.$store.commit('startMusic', music[8]);
+        this.$store.commit('startMusic', musics[8]);
       if (((this.page + 2 === 22) && (this.GET_PAGE_INDEX < 1))
           || ((this.page + 2 === 30) && (this.GET_PAGE_INDEX < 2))
           || ((this.page + 2 === 34) && (this.GET_PAGE_INDEX < 3))
